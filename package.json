@@ -1,0 +1,29 @@
+{
+  "name": "mywallet",
+  "version": "1.0.0",
+  "description": "It's the first version of my wallet.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohanHiguita/My-wallet.git"
+  },
+  "keywords": [
+    "My",
+    "wallet",
+    "nodejs",
+    "server"
+  ],
+  "author": "Johan Higuita",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohanHiguita/My-wallet/issues"
+  },
+  "homepage": "https://github.com/JohanHiguita/My-wallet#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
