@@ -5,6 +5,7 @@ var user = {
     email: "test@email.com",
 };
 
+
 function renderAccounts(accounts) {
 	const select = document.getElementById("select-accounts")
 	accounts.forEach((accounts) => {
@@ -43,7 +44,6 @@ async function saveTransaction() {
 	} else if (tabId == "transferencia-tab") {
 		form = $("#transferencia-form")
 	}
-	
 	const _dataForm = form.serializeArray()
 	
 	//organize data
@@ -88,9 +88,18 @@ async function saveTransaction() {
 	} 
 }
 
+
+function getToday(){
+    const today = new Date();
+	return today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+}
+
 $(document).ready(async function () {
-
-
+	
+	//set date input today by default
+	console.log(getToday())
+	const d = document.getElementById("fecha").setAttribute("value", getToday());;
+	//d.value = getToday();
 	document
 		.getElementById("save-transaction")
 		.addEventListener("click", saveTransaction)
