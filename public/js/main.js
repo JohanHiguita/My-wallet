@@ -21,7 +21,7 @@ function renderTransactions(transactions) {
 	//console.log(tbody)
 
 	transactions.forEach((trans) => {
-
+		//const date = new Date(trans.date)
 		const row = table.insertRow(-1)
 
 		const cell1 = row.insertCell(0)
@@ -31,7 +31,7 @@ function renderTransactions(transactions) {
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
 
-		cell1.innerHTML = `<td>${trans.date}</td>`;
+		cell1.innerHTML = `<td>${getFormatedDate(new Date(trans.date))}</td>`;
 		cell2.innerHTML = `<td>${trans.type}</td>`;
 		cell3.innerHTML = `<td>${trans.account.name}</td>`;
 		cell4.innerHTML = `<td>${trans.amount}</td>`;
@@ -124,21 +124,23 @@ async function saveTransaction() {
 	}
 }
 
-function getToday() {
-	const today = new Date()
+function getFormatedDate(date) {
+	/*  YYYY-MM-dd */
+	//const date = 
 	return (
-		today.getFullYear() +
+		date.getFullYear() +
 		"-" +
-		("0" + (today.getMonth() + 1)).slice(-2) +
+		("0" + (date.getMonth() + 1)).slice(-2) +
 		"-" +
-		("0" + today.getDate()).slice(-2)
+		("0" + date.getDate()).slice(-2)
 	)
 }
 
 $(document).ready(async function () {
 	//set date input today by default
-	console.log(getToday())
-	const d = document.getElementById("fecha").setAttribute("value", getToday())
+	//console.log(getToday())
+	const today = new Date();
+	const d = document.getElementById("fecha").setAttribute("value", getFormatedDate(today))
 	//d.value = getToday();
 	document
 		.getElementById("save-transaction")
