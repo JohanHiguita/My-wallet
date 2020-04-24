@@ -13,6 +13,7 @@ async function getAccounts (){
 
 async function getTransactions(){
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
+	console.log(transactionsData)
 	renderTransactions(transactionsData)
 }
 
@@ -75,8 +76,11 @@ async function saveTransaction() {
 		console.log(error)
 		alert("Error!")
 	} finally {
-		//close modal
+		
 		$("#agregar-modal").modal("hide")
+		//Reload table
+		getTransactions();
+
 	}
 }
 
@@ -96,8 +100,21 @@ function renderTransactions(transactions) {
 	const table = document.getElementById("table-transactions")
 	//console.log(tbody)
 
-	transactions.forEach((trans) => {
-		//const date = new Date(trans.date)
+	transactions.forEach((transaction) => {
+		
+		//Styles for type column
+		let typeClasses = []
+		if(transaction.type == "expense"){
+			typeClasses.push("border-bottom");
+			typeClasses.push("border-danger");
+			typeClasses.push("alert-danger");
+		}else if (transaction.type == "income"){
+			//typeClasses.push("border");
+			typeClasses.push("border-bottom");
+			typeClasses.push("border-success");
+			typeClasses.push("alert-success");
+		}
+
 		const row = table.insertRow(-1)
 
 		const cell1 = row.insertCell(0)
@@ -106,14 +123,17 @@ function renderTransactions(transactions) {
 		const cell4 = row.insertCell(3)
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
+		
 
-		cell1.innerHTML = `<td>${getFormatedDate(new Date(trans.date))}</td>`;
-		cell2.innerHTML = `<td>${trans.type}</td>`;
-		cell3.innerHTML = `<td>${trans.account.name}</td>`;
-		cell4.innerHTML = `<td>${trans.amount}</td>`;
-		cell5.innerHTML = `<td>${trans.category.name}</td>`;
-		cell6.innerHTML = `<td>${trans.note}</td>`;
-
+		
+		cell1.innerHTML = `<td>${getFormatedDate(new Date(transaction.date))}</td>`;
+		cell2.innerHTML = `<th>${transaction.type}</td>`;
+		cell3.innerHTML = `<td>${transaction.account.name}</td>`;
+		cell4.innerHTML = `<td>${transaction.amount}</td>`;
+		cell5.innerHTML = `<td>${transaction.category.name}</td>`;
+		cell6.innerHTML = `<td>${transaction.note}</td>`;
+		
+		cell2.classList.add(...typeClasses);
 	})
 }
 
