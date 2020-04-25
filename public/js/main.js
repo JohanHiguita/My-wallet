@@ -46,7 +46,7 @@ async function saveTransaction() {
 	}, {})
 
 	const data = {
-		amount: Number(dataForm["valor"]),
+		amount: Number(dataForm["valor"].split('.').join("")),
 		note: dataForm["nota"].trim(),
 		date: dataForm["fecha"],
 		type: type,
@@ -86,8 +86,37 @@ async function saveTransaction() {
 
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
-	const select = document.getElementById("select-accounts")
+	
+	console.log(accounts)
+	
 	accounts.forEach((accounts) => {
+		//Render Divs 
+		const div = document.createElement("div");
+		div.classList.add("p-2");
+		div.classList.add("bd-highlight");
+				
+		//format money values
+		const incomes = new Intl.NumberFormat("de-DE").format(accounts.incomes);
+		const expenses = new Intl.NumberFormat("de-DE").format(accounts.expenses);
+		const balance = new Intl.NumberFormat("de-DE").format(accounts.balance);
+
+		const card = `
+		<div class="card" style="width: 18rem;">
+		<div class="card-body">
+		<h5 class="card-title">${accounts.name}</h5>
+		<div class="card-text">Incomes:&ensp;$${incomes}</div>
+		<div class="card-text">Expenses:&ensp;$${expenses}</div>
+		<div class="card-text">Balance:&ensp;$${balance}</div>
+		</div>
+		</div>`;
+		
+		div.innerHTML = card;
+		
+		document.getElementById("data-containers").appendChild(div);
+		
+		
+		//Render Select box
+		const select = document.getElementById("select-accounts")
 		const op = document.createElement("option")
 		op.setAttribute("value", accounts["_id"])
 		op.text = accounts["name"]
@@ -129,7 +158,7 @@ function renderTransactions(transactions) {
 		cell1.innerHTML = `<td>${getFormatedDate(new Date(transaction.date))}</td>`;
 		cell2.innerHTML = `<th>${transaction.type}</td>`;
 		cell3.innerHTML = `<td>${transaction.account.name}</td>`;
-		cell4.innerHTML = `<td>${transaction.amount}</td>`;
+		cell4.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(transaction.amount)}</td>`;
 		cell5.innerHTML = `<td>${transaction.category.name}</td>`;
 		cell6.innerHTML = `<td>${transaction.note}</td>`;
 		
@@ -160,6 +189,12 @@ function getFormatedDate(date) {
 	)
 }
 
+function formatNumber(){
+	const currentVal = Number(this.value.split('.').join(""));
+	const val = new Intl.NumberFormat("de-DE").format(currentVal);
+	this.value = val;
+}
+
 $(document).ready(function () {
 
 	//API Communications (pending: send useriD to filter)
@@ -167,11 +202,19 @@ $(document).ready(function () {
 	getTransactions();	
 	getCategories();
 
+	
+	/* Format Date */
 	const today = new Date();
 	const d = document.getElementById("fecha").setAttribute("value", getFormatedDate(today))
+
+	/* onclick Save Transaction  */
 	document
 		.getElementById("save-transaction")
 		.addEventListener("click", saveTransaction)
 
+	/* keyup type input value  */
+	document
+	.getElementById("valor")
+	.addEventListener("keyup", formatNumber)
 
 })
