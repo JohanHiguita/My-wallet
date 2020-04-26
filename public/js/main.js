@@ -13,7 +13,6 @@ async function getAccounts (){
 
 async function getTransactions(){
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
-	//console.log(transactionsData)
 	renderTransactions(transactionsData)
 }
 
@@ -125,7 +124,7 @@ function renderAccounts(accounts) {
 }
 
 function renderTransactions(transactions) {
-
+	console.log(transactions)
 	const tbody = document.getElementById("transactions-tbody");
 	tbody.innerHTML = '';
 	
@@ -151,10 +150,8 @@ function renderTransactions(transactions) {
 		const cell4 = row.insertCell(3)
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
-		
 
-		
-		cell1.innerHTML = `<td>${getFormatedDate(new Date(transaction.date))}</td>`;
+		cell1.innerHTML = `<td>${moment.utc(transaction.date).format("DD-MMM-YYYY")}</td>`;
 		cell2.innerHTML = `<th>${transaction.type}</td>`;
 		cell3.innerHTML = `<td>${transaction.account.name}</td>`;
 		cell4.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(transaction.amount)}</td>`;
@@ -201,10 +198,8 @@ $(document).ready(function () {
 	getTransactions();	
 	getCategories();
 
-	
 	/* Format Date */
-	const today = new Date();
-	const d = document.getElementById("fecha").setAttribute("value", getFormatedDate(today))
+	document.getElementById("fecha").setAttribute("value", moment().format("YYYY-MM-DD"))
 
 	/* onclick Save Transaction  */
 	document
