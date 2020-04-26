@@ -13,7 +13,7 @@ async function getAccounts (){
 
 async function getTransactions(){
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
-	console.log(transactionsData)
+	//console.log(transactionsData)
 	renderTransactions(transactionsData)
 }
 
@@ -125,10 +125,10 @@ function renderAccounts(accounts) {
 }
 
 function renderTransactions(transactions) {
-	//console.log("Data:", data)
-	const table = document.getElementById("table-transactions")
-	//console.log(tbody)
 
+	const tbody = document.getElementById("transactions-tbody");
+	tbody.innerHTML = '';
+	
 	transactions.forEach((transaction) => {
 		
 		//Styles for type column
@@ -138,13 +138,12 @@ function renderTransactions(transactions) {
 			typeClasses.push("border-danger");
 			typeClasses.push("alert-danger");
 		}else if (transaction.type == "income"){
-			//typeClasses.push("border");
 			typeClasses.push("border-bottom");
 			typeClasses.push("border-success");
 			typeClasses.push("alert-success");
 		}
 
-		const row = table.insertRow(-1)
+		const row = tbody.insertRow(-1)
 
 		const cell1 = row.insertCell(0)
 		const cell2 = row.insertCell(1)
