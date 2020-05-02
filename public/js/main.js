@@ -6,20 +6,24 @@ var user = {
 }
 
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
-async function getAccounts (){
+async function getAccounts() {
 	const accountsData = await $.get(`${rootUrlApi}/accounts`)
 	renderAccounts(accountsData)
 }
 
-async function getTransactions(){
+async function getTransactions() {
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
 	renderTransactions(transactionsData)
 }
 
-async function getCategories(){
-	
+async function getCategories() {
 	const categoriesData = await $.get(`${rootUrlApi}/categories`)
 	renderCategories(categoriesData)
+}
+
+async function getBudgetData() {
+	const budgetData = await $.get(`${rootUrlApi}/budget`)
+	renderBudget(budgetData)
 }
 
 async function saveTransaction() {
@@ -38,14 +42,14 @@ async function saveTransaction() {
 	}
 	const _dataForm = form.serializeArray()
 
-/* organize data */
+	/* organize data */
 	const dataForm = _dataForm.reduce((prev, curr) => {
 		prev[curr["name"]] = curr["value"]
 		return prev
 	}, {})
 
 	const data = {
-		amount: Number(dataForm["valor"].split('.').join("")),
+		amount: Number(dataForm["valor"].split(".").join("")),
 		note: dataForm["nota"].trim(),
 		date: dataForm["fecha"],
 		type: type,
@@ -75,29 +79,27 @@ async function saveTransaction() {
 		console.log(error)
 		alert("Error!")
 	} finally {
-		
 		$("#agregar-modal").modal("hide")
 		//Reload table
-		getTransactions();
-
+		getTransactions()
+		getBudgetData()
 	}
 }
 
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
-	
 	console.log(accounts)
-	
+
 	accounts.forEach((accounts) => {
-		//Render Divs 
-		const div = document.createElement("div");
-		div.classList.add("p-2");
-		div.classList.add("bd-highlight");
-				
+		//Render Divs
+		const div = document.createElement("div")
+		div.classList.add("p-2")
+		div.classList.add("bd-highlight")
+
 		//format money values
-		const incomes = new Intl.NumberFormat("de-DE").format(accounts.incomes);
-		const expenses = new Intl.NumberFormat("de-DE").format(accounts.expenses);
-		const balance = new Intl.NumberFormat("de-DE").format(accounts.balance);
+		const incomes = new Intl.NumberFormat("de-DE").format(accounts.incomes)
+		const expenses = new Intl.NumberFormat("de-DE").format(accounts.expenses)
+		const balance = new Intl.NumberFormat("de-DE").format(accounts.balance)
 
 		const card = `
 		<div class="card" style="width: 18rem;">
@@ -107,13 +109,12 @@ function renderAccounts(accounts) {
 		<div class="card-text">Expenses:&ensp;$${expenses}</div>
 		<div class="card-text">Balance:&ensp;$${balance}</div>
 		</div>
-		</div>`;
-		
-		div.innerHTML = card;
-		
-		document.getElementById("data-containers").appendChild(div);
-		
-		
+		</div>`
+
+		div.innerHTML = card
+
+		document.getElementById("data-containers").appendChild(div)
+
 		//Render Select box
 		const select = document.getElementById("select-accounts")
 		const op = document.createElement("option")
@@ -124,22 +125,21 @@ function renderAccounts(accounts) {
 }
 
 function renderTransactions(transactions) {
-	console.log(transactions)
-	const tbody = document.getElementById("transactions-tbody");
-	tbody.innerHTML = '';
-	
+	//console.log(transactions)
+	const tbody = document.getElementById("transactions-tbody")
+	tbody.innerHTML = ""
+
 	transactions.forEach((transaction) => {
-		
 		//Styles for type column
 		let typeClasses = []
-		if(transaction.type == "expense"){
-			typeClasses.push("border-bottom");
-			typeClasses.push("border-danger");
-			typeClasses.push("alert-danger");
-		}else if (transaction.type == "income"){
-			typeClasses.push("border-bottom");
-			typeClasses.push("border-success");
-			typeClasses.push("alert-success");
+		if (transaction.type == "expense") {
+			typeClasses.push("border-bottom")
+			typeClasses.push("border-danger")
+			typeClasses.push("alert-danger")
+		} else if (transaction.type == "income") {
+			typeClasses.push("border-bottom")
+			typeClasses.push("border-success")
+			typeClasses.push("alert-success")
 		}
 
 		const row = tbody.insertRow(-1)
@@ -151,14 +151,18 @@ function renderTransactions(transactions) {
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
 
-		cell1.innerHTML = `<td>${moment.utc(transaction.date).format("DD-MMM-YYYY")}</td>`;
-		cell2.innerHTML = `<th>${transaction.type}</td>`;
-		cell3.innerHTML = `<td>${transaction.account.name}</td>`;
-		cell4.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(transaction.amount)}</td>`;
-		cell5.innerHTML = `<td>${transaction.category.name}</td>`;
-		cell6.innerHTML = `<td>${transaction.note}</td>`;
-		
-		cell2.classList.add(...typeClasses);
+		cell1.innerHTML = `<td>${moment
+			.utc(transaction.date)
+			.format("DD-MMM-YYYY")}</td>`
+		cell2.innerHTML = `<th>${transaction.type}</td>`
+		cell3.innerHTML = `<td>${transaction.account.name}</td>`
+		cell4.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(
+			transaction.amount
+		)}</td>`
+		cell5.innerHTML = `<td>${transaction.category.name}</td>`
+		cell6.innerHTML = `<td>${transaction.note}</td>`
+
+		cell2.classList.add(...typeClasses)
 	})
 }
 
@@ -172,10 +176,42 @@ function renderCategories(categories) {
 	})
 }
 
+function renderBudget(budgetData) {
+	//console.log(budgetData)
+	
+	const budgetContainer = document.getElementById("budget-container");
+	budgetContainer.innerHTML = ""
+
+	const div = document.createElement("div")
+	div.classList.add("p-2")
+	div.classList.add("bd-highlight")
+
+	//format money values
+	const budget = new Intl.NumberFormat("de-DE").format(budgetData.budget)
+	const spent = new Intl.NumberFormat("de-DE").format(budgetData.spent)
+	const available = new Intl.NumberFormat("de-DE").format(budgetData.budget - budgetData.spent)
+	
+	const availableClass = available < 0 ? "alert-danger": "alert-success";
+			
+	const card = `
+		<div class="card" style="width: 18rem;">
+	    <div class="card-body">
+		<h5 class="card-title">Budget</h5>
+		<div class="card-text">Budget:&ensp;$${budget}</div>
+		<div class="card-text">Gastado:&ensp;$${spent}</div>
+		<div class="card-text ${availableClass}">Disponible:&ensp;$${available}</div>
+		</div>
+		</div>`
+
+	div.innerHTML = card
+
+	budgetContainer.appendChild(div)
+}
+
 /* <<<<<<<<<<<< Other fucntions  >>>>>>>>>>>>>>>*/
 function getFormatedDate(date) {
 	/*  YYYY-MM-dd */
-	//const date = 
+	//const date =
 	return (
 		date.getFullYear() +
 		"-" +
@@ -185,21 +221,23 @@ function getFormatedDate(date) {
 	)
 }
 
-function formatNumber(){
-	const currentVal = Number(this.value.split('.').join(""));
-	const val = new Intl.NumberFormat("de-DE").format(currentVal);
-	this.value = val;
+function formatNumber() {
+	const currentVal = Number(this.value.split(".").join(""))
+	const val = new Intl.NumberFormat("de-DE").format(currentVal)
+	this.value = val
 }
 
 $(document).ready(function () {
-
 	//API Communications (pending: send useriD to filter)
-	getAccounts();	
-	getTransactions();	
-	getCategories();
+	getAccounts()
+	getTransactions()
+	getCategories()
+	getBudgetData()
 
 	/* Format Date */
-	document.getElementById("fecha").setAttribute("value", moment().format("YYYY-MM-DD"))
+	document
+		.getElementById("fecha")
+		.setAttribute("value", moment().format("YYYY-MM-DD"))
 
 	/* onclick Save Transaction  */
 	document
@@ -207,8 +245,5 @@ $(document).ready(function () {
 		.addEventListener("click", saveTransaction)
 
 	/* keyup type input value  */
-	document
-	.getElementById("valor")
-	.addEventListener("keyup", formatNumber)
-
+	document.getElementById("valor").addEventListener("keyup", formatNumber)
 })
