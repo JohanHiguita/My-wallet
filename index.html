@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="#">My Wallet</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,31 +49,47 @@
             </form>
         </div>
     </nav>
-    <div class="main">
-        <div id="data-containers" class="d-flex flex-row bd-highlight mb-3">
-            <!-- data contairs here -->
+    <div class="main row">
+        <!-- Left SideBar -->
+        <div class="col-2 p-0">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active">Active</a>
+                <a href="#" class="list-group-item list-group-item-action">Categorias</a>
+                <a href="#" class="list-group-item list-group-item-action">Gastos Fijos</a>
+                <a href="#" class="list-group-item list-group-item-action">Préstamos</a>
+                <a href="#" class="list-group-item list-group-item-action">Stats</a>
+                
+              </div>
         </div>
-        <div id = "budget-container"class="d-flex flex-row bd-highlight mb-3">
-            <!-- data contairs here -->
+        <!-- Right main content -->
+        <div class="col">
+
+            <div id="data-containers" class="d-flex flex-row bd-highlight mb-3">
+                <!-- data contairs here -->
+            </div>
+            <div id = "budget-container"class="d-flex flex-row bd-highlight mb-3">
+                <!-- data contairs here -->
+            </div>
+            <!-- Table Transactions -->
+            <div class="p-2">
+                <table id="table-transactions" class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Account</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-tbody">
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" id="add-transaction-btn" class="btn btn-success" data-toggle="modal"
+                data-target="#agregar-modal">Agregar</button>
         </div>
-        <div class="p-2">
-            <table id="table-transactions" class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Account</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Description</th>
-                    </tr>
-                </thead>
-                <tbody id="transactions-tbody">
-                </tbody>
-            </table>
-        </div>
-        <button type="button" id="add-transaction-btn" class="btn btn-success" data-toggle="modal"
-            data-target="#agregar-modal">Agregar</button>
     </div>
 
     <!-- 'Agregar transacción' Modal -->
