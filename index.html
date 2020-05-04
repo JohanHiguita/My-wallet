@@ -57,9 +57,10 @@
                 <a href="#" class="list-group-item list-group-item-action">Categorias</a>
                 <a href="#" class="list-group-item list-group-item-action">Gastos Fijos</a>
                 <a href="#" class="list-group-item list-group-item-action">Préstamos</a>
+                <a href="#" class="list-group-item list-group-item-action">Fiducias</a>
                 <a href="#" class="list-group-item list-group-item-action">Stats</a>
-                
-              </div>
+
+            </div>
         </div>
         <!-- Right main content -->
         <div class="col">
@@ -67,7 +68,7 @@
             <div id="data-containers" class="d-flex flex-row bd-highlight mb-3">
                 <!-- data contairs here -->
             </div>
-            <div id = "budget-container"class="d-flex flex-row bd-highlight mb-3">
+            <div id="budget-container" class="d-flex flex-row bd-highlight mb-3">
                 <!-- data contairs here -->
             </div>
             <!-- Table Transactions -->
@@ -91,6 +92,11 @@
                 data-target="#agregar-modal">Agregar</button>
         </div>
     </div>
+
+
+
+    <!-- Modales -->
+
 
     <!-- 'Agregar transacción' Modal -->
     <div class="modal fade" id="agregar-modal" tabindex="-1" role="dialog" aria-labelledby="agregar-modalLabel"
@@ -168,6 +174,30 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" id="save-transaction">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mostrar Cuenta ahorros -->
+    <div class="modal fade" id="show-cuenta-de-ahorros" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cuenta de Ahorros</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Bolsillos</h4>
+                    <div id="bolsillos">
+                        <!-- Bolsillo content here -->
+                    </div>
+                    <div><b>Total Bolsillos: </b>$<span>120000</span></div>
+                    <br>
+                    <div class="bg-secondary p-2 text-light"><b>Disponible: </b>$<span>120000</span></div>
+
                 </div>
             </div>
         </div>

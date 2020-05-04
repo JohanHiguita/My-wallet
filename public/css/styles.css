@@ -3,3 +3,14 @@
 	bottom: 50px;
 	right: 70px;
 }
+
+.account-container{
+	cursor: pointer;
+
+}
+
+.account-container:hover{
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(100,100,100,1);
+	-moz-box-shadow   : 0px 0px 5px 0px rgba(100,100,100,1);
+	box-shadow        : 0px 0px 5px 0px rgba(100,100,100,1);
+}

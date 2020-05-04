@@ -8,6 +8,7 @@ var user = {
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
 	const accountsData = await $.get(`${rootUrlApi}/accounts`)
+	window.accountsData = accountsData 		
 	renderAccounts(accountsData)
 }
 
@@ -86,25 +87,37 @@ async function saveTransaction() {
 	}
 }
 
+async function getAccountData(id){
+	const accountData = await $.get(`${rootUrlApi}/accounts/${id}`);
+	return accountData;
+	
+} 
+
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
 	console.log(accounts)
 
-	accounts.forEach((accounts) => {
+	accounts.forEach((account) => {
 		//Render Divs
 		const div = document.createElement("div")
 		div.classList.add("p-2")
 		div.classList.add("bd-highlight")
+		div.classList.add("account-container")
+		div.id = account.name.toLowerCase().split(' ').join('-')
+
+		div.setAttribute("data-toggle", "modal");
+		div.setAttribute("data-target", `#show-${div.id}`);
+		div.setAttribute("data-account-id", account._id);
 
 		//format money values
-		const incomes = new Intl.NumberFormat("de-DE").format(accounts.incomes)
-		const expenses = new Intl.NumberFormat("de-DE").format(accounts.expenses)
-		const balance = new Intl.NumberFormat("de-DE").format(accounts.balance)
+		const incomes = new Intl.NumberFormat("de-DE").format(account.incomes)
+		const expenses = new Intl.NumberFormat("de-DE").format(account.expenses)
+		const balance = new Intl.NumberFormat("de-DE").format(account.balance)
 
 		const card = `
 		<div class="card" style="width: 18rem;">
 		<div class="card-body">
-		<h5 class="card-title">${accounts.name}</h5>
+		<h5 class="card-title">${account.name}</h5>
 		<div class="card-text">Incomes:&ensp;$${incomes}</div>
 		<div class="card-text">Expenses:&ensp;$${expenses}</div>
 		<div class="card-text">Balance:&ensp;$${balance}</div>
@@ -114,12 +127,13 @@ function renderAccounts(accounts) {
 		div.innerHTML = card
 
 		document.getElementById("data-containers").appendChild(div)
+		//----------------------------------------------------------------- 
 
 		//Render Select box
 		const select = document.getElementById("select-accounts")
 		const op = document.createElement("option")
-		op.setAttribute("value", accounts["_id"])
-		op.text = accounts["name"]
+		op.setAttribute("value", account["_id"])
+		op.text = account["name"]
 		select.add(op)
 	})
 }
@@ -208,6 +222,21 @@ function renderBudget(budgetData) {
 	budgetContainer.appendChild(div)
 }
 
+function renderCuentaAhorrosModal(accountData){
+
+	const bolsillosData = accountData.pockets;
+	const bolsillosContainer = document.getElementById("bolsillos");
+	bolsillosContainer.innerHTML = ""
+	
+	bolsillosData.forEach(pocket => {
+		const amount = new Intl.NumberFormat("de-DE").format(pocket.amount)
+		const pocketDiv = `<div title = "${pocket.description}"><b>${pocket.name}:&nbsp;</b><span>$</span><span>${amount}</span></div>`;
+		bolsillosContainer.innerHTML += pocketDiv;
+
+	});
+	
+}
+
 /* <<<<<<<<<<<< Other fucntions  >>>>>>>>>>>>>>>*/
 function getFormatedDate(date) {
 	/*  YYYY-MM-dd */
@@ -246,4 +275,13 @@ $(document).ready(function () {
 
 	/* keyup type input value  */
 	document.getElementById("valor").addEventListener("keyup", formatNumber)
+
+	/* show modal cuenta de ahorros */
+	$('#show-cuenta-de-ahorros').on('show.bs.modal', async function (e) {
+
+		const accountId = e.relatedTarget.dataset.accountId;
+		const accountData = await getAccountData(accountId);
+		renderCuentaAhorrosModal(accountData);
+		
+	})
 })
