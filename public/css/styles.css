@@ -14,3 +14,18 @@
 	-moz-box-shadow   : 0px 0px 5px 0px rgba(100,100,100,1);
 	box-shadow        : 0px 0px 5px 0px rgba(100,100,100,1);
 }
+
+
+/* Sidenav */
+.sidenav {
+	height: 100%;
+	width: 160px;
+	position: fixed;
+	left: 0;
+	overflow-x: hidden;
+  }
+    
+  .main-content {
+	margin-left: 160px; /* Same as the width of the sidenav */
+	padding: 0px 10px;
+  }
