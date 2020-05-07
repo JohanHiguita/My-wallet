@@ -8,7 +8,7 @@ var user = {
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
 	const accountsData = await $.get(`${rootUrlApi}/accounts`)
-	window.accountsData = accountsData 		
+	window.accountsData = accountsData
 	renderAccounts(accountsData)
 }
 
@@ -87,11 +87,11 @@ async function saveTransaction() {
 	}
 }
 
-async function getAccountData(id){
+async function getAccountData(id) {
 	const accountData = await $.get(`${rootUrlApi}/accounts/${id}`);
 	return accountData;
-	
-} 
+
+}
 
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
@@ -192,7 +192,7 @@ function renderCategories(categories) {
 
 function renderBudget(budgetData) {
 	//console.log(budgetData)
-	
+
 	const budgetContainer = document.getElementById("budget-container");
 	budgetContainer.innerHTML = ""
 
@@ -204,9 +204,9 @@ function renderBudget(budgetData) {
 	const budget = new Intl.NumberFormat("de-DE").format(budgetData.budget)
 	const spent = new Intl.NumberFormat("de-DE").format(budgetData.spent)
 	const available = new Intl.NumberFormat("de-DE").format(budgetData.budget - budgetData.spent)
-	
-	const availableClass = available < 0 ? "alert-danger": "alert-success";
-			
+
+	const availableClass = available < 0 ? "alert-danger" : "alert-success";
+
 	const card = `
 		<div class="card" style="width: 18rem;">
 	    <div class="card-body">
@@ -222,19 +222,36 @@ function renderBudget(budgetData) {
 	budgetContainer.appendChild(div)
 }
 
-function renderCuentaAhorrosModal(accountData){
+function renderCuentaAhorrosModal(accountData) {
 
 	const bolsillosData = accountData.pockets;
+	let totalBolsillos = bolsillosData.reduce((acc, curr) => {
+		return acc + curr.amount
+	}, 0)
+	let available = accountData.balance - totalBolsillos;
+
+	totalBolsillos = new Intl.NumberFormat("de-DE").format(totalBolsillos);
+	available      = new Intl.NumberFormat("de-DE").format(available)
+
 	const bolsillosContainer = document.getElementById("bolsillos");
 	bolsillosContainer.innerHTML = ""
-	
+
 	bolsillosData.forEach(pocket => {
 		const amount = new Intl.NumberFormat("de-DE").format(pocket.amount)
 		const pocketDiv = `<div title = "${pocket.description}"><b>${pocket.name}:&nbsp;</b><span>$</span><span>${amount}</span></div>`;
 		bolsillosContainer.innerHTML += pocketDiv;
-
 	});
-	
+
+	// add Total
+	const totalDiv = `<br><div title = "Total en Bolsillos"><b>Total Bolsillos:&nbsp;</b><span>$</span><span>${totalBolsillos}</span></div><br>`;
+	const availableDiv =
+		"<div class=\"bg-secondary p-2 text-light\" title = \"Disponible en cuenta\">" +
+		`<b>Disponible:&nbsp;</b><span>$</span><span>${available}</span>` +
+		"</div>";
+
+	bolsillosContainer.innerHTML += totalDiv;
+	bolsillosContainer.innerHTML += availableDiv;
+
 }
 
 /* <<<<<<<<<<<< Other fucntions  >>>>>>>>>>>>>>>*/
@@ -282,6 +299,6 @@ $(document).ready(function () {
 		const accountId = e.relatedTarget.dataset.accountId;
 		const accountData = await getAccountData(accountId);
 		renderCuentaAhorrosModal(accountData);
-		
+
 	})
 })
