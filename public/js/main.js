@@ -4,6 +4,7 @@ var user = {
 	name: "User Test",
 	email: "test@email.com",
 }
+moment.locale('es');
 
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
@@ -14,6 +15,7 @@ async function getAccounts() {
 
 async function getTransactions() {
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
+	//console.log(transactionsData) 
 	renderTransactions(transactionsData)
 }
 
@@ -164,19 +166,22 @@ function renderTransactions(transactions) {
 		const cell4 = row.insertCell(3)
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
+		const cell7 = row.insertCell(6)
 
+		
 		cell1.innerHTML = `<td>${moment
-			.utc(transaction.date)
+			.utc(transaction.createdAt)
 			.format("DD-MMM-YYYY")}</td>`
-		cell2.innerHTML = `<th>${transaction.type}</td>`
-		cell3.innerHTML = `<td>${transaction.account.name}</td>`
-		cell4.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(
+		cell2.innerHTML = `<td>${moment(transaction.payment_month).format("MMMM")}</td>`
+		cell3.innerHTML = `<td>${transaction.type}</td>`
+		cell4.innerHTML = `<td>${transaction.account.name}</td>`
+		cell5.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(
 			transaction.amount
 		)}</td>`
-		cell5.innerHTML = `<td>${transaction.category.name}</td>`
-		cell6.innerHTML = `<td>${transaction.note}</td>`
+		cell6.innerHTML = `<td>${transaction.category.name}</td>`
+		cell7.innerHTML = `<td>${transaction.note}</td>`
 
-		cell2.classList.add(...typeClasses)
+		cell3.classList.add(...typeClasses)
 	})
 }
 
@@ -191,7 +196,6 @@ function renderCategories(categories) {
 }
 
 function renderBudget(budgetData) {
-	//console.log(budgetData)
 
 	const budgetContainer = document.getElementById("budget-container");
 	budgetContainer.innerHTML = ""
