@@ -4,7 +4,7 @@ var user = {
 	name: "User Test",
 	email: "test@email.com",
 }
-moment.locale('es');
+
 
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
@@ -15,7 +15,7 @@ async function getAccounts() {
 
 async function getTransactions() {
 	const transactionsData = await $.get(`${rootUrlApi}/transactions`)
-	//console.log(transactionsData) 
+	//console.log(transactionsData)
 	renderTransactions(transactionsData)
 }
 
@@ -34,6 +34,7 @@ async function saveTransaction() {
 	let type
 	const tabId = $(".nav-tabs .active").attr("id")
 
+	//get type of transaction (depends on active tab)
 	if (tabId == "gasto-tab") {
 		form = $("#gasto-ingreso-form")
 		type = "expense"
@@ -43,6 +44,8 @@ async function saveTransaction() {
 	} else if (tabId == "transferencia-tab") {
 		form = $("#transferencia-form")
 	}
+
+
 	const _dataForm = form.serializeArray()
 
 	/* organize data */
@@ -51,10 +54,12 @@ async function saveTransaction() {
 		return prev
 	}, {})
 
+	const paymentMonth = moment().month(dataForm["month"]).startOf('month').format("YYYY-MM-DD");
+
 	const data = {
 		amount: Number(dataForm["valor"].split(".").join("")),
 		note: dataForm["nota"].trim(),
-		date: dataForm["fecha"],
+		payment_month: paymentMonth,
 		type: type,
 		user_id: user["_id"],
 		category_id: dataForm["categoria"],
@@ -168,7 +173,7 @@ function renderTransactions(transactions) {
 		const cell6 = row.insertCell(5)
 		const cell7 = row.insertCell(6)
 
-		
+
 		cell1.innerHTML = `<td>${moment
 			.utc(transaction.createdAt)
 			.format("DD-MMM-YYYY")}</td>`
@@ -235,7 +240,7 @@ function renderCuentaAhorrosModal(accountData) {
 	let available = accountData.balance - totalBolsillos;
 
 	totalBolsillos = new Intl.NumberFormat("de-DE").format(totalBolsillos);
-	available      = new Intl.NumberFormat("de-DE").format(available)
+	available = new Intl.NumberFormat("de-DE").format(available)
 
 	const bolsillosContainer = document.getElementById("bolsillos");
 	bolsillosContainer.innerHTML = ""
@@ -258,18 +263,6 @@ function renderCuentaAhorrosModal(accountData) {
 
 }
 
-/* <<<<<<<<<<<< Other fucntions  >>>>>>>>>>>>>>>*/
-function getFormatedDate(date) {
-	/*  YYYY-MM-dd */
-	//const date =
-	return (
-		date.getFullYear() +
-		"-" +
-		("0" + (date.getMonth() + 1)).slice(-2) +
-		"-" +
-		("0" + date.getDate()).slice(-2)
-	)
-}
 
 function formatNumber() {
 	const currentVal = Number(this.value.split(".").join(""))
@@ -285,9 +278,9 @@ $(document).ready(function () {
 	getBudgetData()
 
 	/* Format Date */
-	document
-		.getElementById("fecha")
-		.setAttribute("value", moment().format("YYYY-MM-DD"))
+	// document
+	// 	.getElementById("fecha")
+	// 	.setAttribute("value", moment().format("YYYY-MM-DD"))
 
 	/* onclick Save Transaction  */
 	document
