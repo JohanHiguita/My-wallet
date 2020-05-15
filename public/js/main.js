@@ -277,10 +277,9 @@ $(document).ready(function () {
 	getCategories()
 	getBudgetData()
 
-	/* Format Date */
-	// document
-	// 	.getElementById("fecha")
-	// 	.setAttribute("value", moment().format("YYYY-MM-DD"))
+	/* Set current month */
+	const currentMonth = moment().month();
+	document.getElementById("month").options[currentMonth].selected = true;
 
 	/* onclick Save Transaction  */
 	document
