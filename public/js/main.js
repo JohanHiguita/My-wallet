@@ -9,7 +9,6 @@ var user = {
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
 	const accountsData = await $.get(`${rootUrlApi}/accounts`)
-	window.accountsData = accountsData
 	renderAccounts(accountsData)
 }
 
@@ -137,11 +136,12 @@ function renderAccounts(accounts) {
 		//----------------------------------------------------------------- 
 
 		//Render Select box
-		const select = document.getElementById("select-accounts")
-		const op = document.createElement("option")
-		op.setAttribute("value", account["_id"])
-		op.text = account["name"]
-		select.add(op)
+		const select = document.getElementById("select-accounts");
+		const op = document.createElement("option");
+		op.setAttribute("value", account["_id"]);
+		op.dataset.accountType = account.type;
+		op.text = account["name"];
+		select.add(op);
 	})
 }
 
@@ -270,6 +270,21 @@ function formatNumber() {
 	this.value = val
 }
 
+function changeAccountHandler() {
+
+	const typeSelectedAccount = this.options[this.selectedIndex].dataset.accountType;
+	const diaCorte = 15; //fecha de corte de la Tarjeta de crédito
+	const todayDate = moment().date(); //number day of the month	
+	let monthSet;
+	if (typeSelectedAccount === "credit card" && todayDate >= diaCorte){
+		monthSet = moment().month() + 1;
+	}else {
+		monthSet = moment().month();
+	}
+
+	document.getElementById("month").options[monthSet].selected = true;
+}
+
 $(document).ready(function () {
 	//API Communications (pending: send useriD to filter)
 	getAccounts()
@@ -288,6 +303,11 @@ $(document).ready(function () {
 
 	/* keyup type input value  */
 	document.getElementById("valor").addEventListener("keyup", formatNumber)
+	
+	/* onchange accounts */
+	document.getElementById("select-accounts").addEventListener("change", changeAccountHandler)
+	
+
 
 	/* show modal cuenta de ahorros */
 	$('#show-cuenta-de-ahorros').on('show.bs.modal', async function (e) {
