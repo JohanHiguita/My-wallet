@@ -147,11 +147,13 @@ function renderAccounts(accounts) {
 
 function renderTransactions(transactions) {
 	//console.log(transactions)
+
 	const tbody = document.getElementById("transactions-tbody")
 	tbody.innerHTML = ""
-
+	
 	transactions.forEach((transaction) => {
 		//Styles for type column
+		const categoryName = transaction.category ? transaction.category.name : "-";
 		let typeClasses = []
 		if (transaction.type == "expense") {
 			typeClasses.push("border-bottom")
@@ -162,9 +164,9 @@ function renderTransactions(transactions) {
 			typeClasses.push("border-success")
 			typeClasses.push("alert-success")
 		}
-
+		
 		const row = tbody.insertRow(-1)
-
+		
 		const cell1 = row.insertCell(0)
 		const cell2 = row.insertCell(1)
 		const cell3 = row.insertCell(2)
@@ -183,7 +185,7 @@ function renderTransactions(transactions) {
 		cell5.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(
 			transaction.amount
 		)}</td>`
-		cell6.innerHTML = `<td>${transaction.category.name}</td>`
+		cell6.innerHTML = `<td>${categoryName}</td>`
 		cell7.innerHTML = `<td>${transaction.note}</td>`
 
 		cell3.classList.add(...typeClasses)
