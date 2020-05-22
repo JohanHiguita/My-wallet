@@ -151,9 +151,16 @@ function renderTransactions(transactions) {
 	const tbody = document.getElementById("transactions-tbody")
 	tbody.innerHTML = ""
 	
-	transactions.forEach((transaction) => {
-		//Styles for type column
+	for (const prop in transactions) {
+
+		transaction = transactions[prop];
+
+		if(transaction.type === "transfer_in" || transaction.type === "transfer_out"){
+			continue;
+		}
 		const categoryName = transaction.category ? transaction.category.name : "-";
+		
+		//Styles for type column
 		let typeClasses = []
 		if (transaction.type == "expense") {
 			typeClasses.push("border-bottom")
@@ -189,7 +196,7 @@ function renderTransactions(transactions) {
 		cell7.innerHTML = `<td>${transaction.note}</td>`
 
 		cell3.classList.add(...typeClasses)
-	})
+	}
 }
 
 function renderCategories(categories) {
