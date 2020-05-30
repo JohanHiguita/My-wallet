@@ -186,7 +186,7 @@ function renderTransactions(transactions) {
 		cell1.innerHTML = `<td>${moment
 			.utc(transaction.createdAt)
 			.format("DD-MMM-YYYY")}</td>`
-		cell2.innerHTML = `<td>${moment(transaction.payment_month).format("MMMM")}</td>`
+		cell2.innerHTML = `<td>${moment.utc(transaction.payment_month).format("MMMM")}</td>`
 		cell3.innerHTML = `<td>${transaction.type}</td>`
 		cell4.innerHTML = `<td>${transaction.account.name}</td>`
 		cell5.innerHTML = `<td>${new Intl.NumberFormat("de-DE").format(
