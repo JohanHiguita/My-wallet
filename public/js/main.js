@@ -53,6 +53,7 @@ async function saveTransaction() {
 		return prev
 	}, {})
 
+	//paymentMonth is the first day of the month
 	const paymentMonth = moment().month(dataForm["month"]).startOf('month').format("YYYY-MM-DD");
 
 	const data = {
@@ -119,6 +120,7 @@ function renderAccounts(accounts) {
 		const incomes = new Intl.NumberFormat("de-DE").format(account.incomes)
 		const expenses = new Intl.NumberFormat("de-DE").format(account.expenses)
 		const balance = new Intl.NumberFormat("de-DE").format(account.balance)
+		const total = new Intl.NumberFormat("de-DE").format(account.total)
 
 		const card = `
 		<div class="card" style="width: 18rem;">
@@ -127,6 +129,7 @@ function renderAccounts(accounts) {
 		<div class="card-text">Incomes:&ensp;$${incomes}</div>
 		<div class="card-text">Expenses:&ensp;$${expenses}</div>
 		<div class="card-text">Balance:&ensp;$${balance}</div>
+		<div class="card-text">Total:&ensp;$${total}</div>
 		</div>
 		</div>`
 
@@ -171,6 +174,7 @@ function renderTransactions(transactions) {
 			typeClasses.push("border-success")
 			typeClasses.push("alert-success")
 		}
+
 		
 		const row = tbody.insertRow(-1)
 		
@@ -196,6 +200,7 @@ function renderTransactions(transactions) {
 		cell7.innerHTML = `<td>${transaction.note}</td>`
 
 		cell3.classList.add(...typeClasses)
+		//cell5.classList.add("text-right")
 	}
 }
 
