@@ -1,4 +1,4 @@
-var rootUrlApi = "http://localhost:3000"
+var rootUrlApi = "http://localhost:3000";
 var user = {
 	_id: "5e407974abe2d24226922d8a",
 	name: "User Test",
@@ -100,9 +100,36 @@ async function getAccountData(id) {
 
 }
 
+
+async function deleteTransaction(transactionId) {
+
+	try {
+		const response = await $.ajax({
+			url: `${rootUrlApi}/transactions/${transactionId}`,
+			type: "DELETE",
+			async: true,
+			contentType: "application/json; charset=UTF-8",
+		})
+		if(response.success){
+			alert("Transaction deleted");
+			//renderAccounts();
+			//renderTransactions();
+		}else{
+			alert("Error deleting transaction!");
+			console.log(response);
+		}
+		
+	} catch (error) {
+		console.log(error)
+		alert("Error!")
+	}
+
+}
+
+
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
-	console.log(accounts)
+	//console.log(accounts)
 
 	accounts.forEach((account) => {
 		//Render Divs
@@ -185,6 +212,7 @@ function renderTransactions(transactions) {
 		const cell5 = row.insertCell(4)
 		const cell6 = row.insertCell(5)
 		const cell7 = row.insertCell(6)
+		const cell8 = row.insertCell(7)
 
 
 		cell1.innerHTML = `<td>${moment
@@ -198,6 +226,18 @@ function renderTransactions(transactions) {
 		)}</td>`
 		cell6.innerHTML = `<td>${categoryName}</td>`
 		cell7.innerHTML = `<td>${transaction.note}</td>`
+
+		//cell actions:
+		
+		const removeBtn = document.createElement("button");
+		removeBtn.id = `remove_${transaction._id}`;
+		removeBtn.classList.add("text-danger");
+		removeBtn.innerHTML ="&cross;";
+		removeBtn.addEventListener("click", deleteTransaction.bind(this, transaction._id));
+
+		cell8.appendChild(removeBtn);
+		cell8.appendChild(removeBtn);
+		//cell8.innerHTML = `<td><button id="remove_${transaction._id}" class="text-danger">&cross;</button></td>`
 
 		cell3.classList.add(...typeClasses)
 		//cell5.classList.add("text-right")
