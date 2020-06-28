@@ -6,6 +6,7 @@ var user = {
 }
 
 
+
 /* <<<<<<<< API Communication functions >>>>>>>>>> */
 async function getAccounts() {
 	const accountsData = await $.get(`${rootUrlApi}/accounts`)
@@ -24,8 +25,13 @@ async function getCategories() {
 }
 
 async function getBudgetData() {
-	const budgetData = await $.get(`${rootUrlApi}/budget`)
-	renderBudget(budgetData)
+	let budgetData;
+	budgetData = await $.get(`${rootUrlApi}/budget`)
+	setTimeout(async () => {
+		debugger;
+		renderBudget(budgetData)
+		
+	}, 2000);
 }
 
 async function saveTransaction() {
@@ -100,7 +106,6 @@ async function getAccountData(id) {
 
 }
 
-
 async function deleteTransaction(transactionId) {
 
 	try {
@@ -125,7 +130,6 @@ async function deleteTransaction(transactionId) {
 	}
 
 }
-
 
 /* <<<<<<<<<<<<<<<<< Rendering functions >>>>>>>>>>>>>> */
 function renderAccounts(accounts) {
@@ -256,8 +260,8 @@ function renderCategories(categories) {
 
 function renderBudget(budgetData) {
 
-	const budgetContainer = document.getElementById("budget-container");
-	budgetContainer.innerHTML = ""
+	const dataContainer = document.getElementById("data-containers");
+	//dataContainer.innerHTML = ""
 
 	const div = document.createElement("div")
 	div.classList.add("p-2")
@@ -282,7 +286,7 @@ function renderBudget(budgetData) {
 
 	div.innerHTML = card
 
-	budgetContainer.appendChild(div)
+	dataContainer.appendChild(div)
 }
 
 function renderCuentaAhorrosModal(accountData) {
@@ -360,6 +364,9 @@ $(document).ready(function () {
 	
 	/* onchange accounts */
 	document.getElementById("select-accounts").addEventListener("change", changeAccountHandler)
+	
+	/* redirect to categories */
+	//document.getElementById("select-accounts").addEventListener("change", changeAccountHandler)
 	
 
 
