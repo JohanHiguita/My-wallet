@@ -1,10 +1,9 @@
-const http = require("http")
-const fs = require("fs")
 const express = require("express")
 const axios = require('axios');
 const app = express()
 const path = require('path');
 const rootUrlApi = "http://localhost:3000";
+const moment = require('moment');
 
 
 
@@ -19,18 +18,34 @@ app.get("/index2", async function (req, res) {
 
 	const data = {};
 
-		axios.all([getAccounts(), getBudgetData()])
-			.then(axios.spread(function (accountsResponse, budgetResponse) {
+		axios.all([getAccounts(), getBudgetData(), getTransactions()])
+			.then(axios.spread(function (accountsResponse, budgetResponse, transactionsResponse) {
 
-				const accountsData = accountsResponse.data;
-				const budgetData   = budgetResponse.data;
-
+				const accountsData     = accountsResponse.data;
+				const budgetData       = budgetResponse.data;
+				const transactionsData = transactionsResponse.data;
+				
 				data.accounts = accountsData.map(account =>{
 					account.expenses = formatMoney(account.expenses)
 					account.incomes  = formatMoney(account.incomes)
 					account.balance  = formatMoney(account.balance)
 					account.total    = formatMoney(account.total)
 					return account;
+				});
+
+				// Remove transfers
+				data.transactions = transactionsData.filter(transaction =>{
+					return transaction.type != "transfer_in" && transaction.type != "transfer_out"
+				})
+
+				data.transactions = data.transactions.map(transaction => {
+					
+					
+					transaction.createdAt     = moment.utc(transaction.createdAt).format("DD-MMM-YYYY");
+					transaction.payment_month = moment.utc(transaction.payment_month).format("MMMM");
+					transaction.amount        = new Intl.NumberFormat("de-DE").format(transaction.amount);
+
+					return transaction;
 				})
 				
 				const _available     = budgetData.budget - budgetData.spent;
@@ -40,8 +55,10 @@ app.get("/index2", async function (req, res) {
 				const availableClass = _available < 0 ? "alert-danger" : "alert-success"
 
 				data.budget = {budget, spent, available, availableClass}
-				console.log(data);
+
 				
+
+				console.log(data);
 
 				res.render('index', data)
 			}))
@@ -71,6 +88,13 @@ function getBudgetData() {
 	const url = `${rootUrlApi}/budget`;
 	return axios.get(url)
 }
+
+function getTransactions(){
+	const url = `${rootUrlApi}/transactions`;
+	return axios.get(url)
+}
+
+
 function formatMoney(value){
 	
 	let formatedValue = value;

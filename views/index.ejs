@@ -30,7 +30,9 @@
     <!-- Moment JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
         integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous" defer></script>
-
+    
+    <!-- JS Files -->
+    <script src="/js/main2.js" defer></script>
     <title>My wallet</title>
 </head>
 
@@ -116,9 +118,7 @@
                 </div>
                 
             </div>
-            <div id="budget-container" class="row d-flex flex-row bd-highlight mb-3">
-                <!-- data contairs here -->
-            </div>
+           
                 <!-- Table Transactions -->
             <div class="p-2">
                 <table id="table-transactions" class="table table-striped table-sm">
@@ -135,6 +135,27 @@
                         </tr>
                     </thead>
                     <tbody id="transactions-tbody">
+                    <% transactions.forEach(function(transaction){ %>
+                        <tr>
+                            <td><%=transaction.createdAt %></td>
+                            <td><%=transaction.payment_month %></td>
+
+                            <% if (transaction.type == "expense") { %>
+                                <td class="border-bottom border-danger alert-danger"><%=transaction.type %></td>
+                            <% } else{ %>
+                                <td class="border-bottom border-success alert-success"><%=transaction.type %></td>
+                            <% } %>
+
+                            <td><%=transaction.account.name%></td>
+                            <td><%=transaction.amount%></td>
+                            <td><%= transaction.category ? transaction.category.name : "-" %></td>
+                            <td><%=transaction.note%></td>
+                            <td>
+                                <button class="btn-remove text-danger" data-transaction-id="<%=transaction._id%>">&cross;</button>
+                            </td>
+
+                        </tr>
+                    <% }); %>
                     </tbody>
                 </table>
             </div>
