@@ -28,7 +28,7 @@ async function getBudgetData() {
 	let budgetData;
 	budgetData = await $.get(`${rootUrlApi}/budget`)
 	setTimeout(async () => {
-		debugger;
+		//debugger;
 		renderBudget(budgetData)
 		
 	}, 2000);

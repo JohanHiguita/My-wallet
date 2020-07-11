@@ -74,6 +74,12 @@ app.get("/categories", function (req, res) {
 	res.render('categories', categories);
 })
 
+app.delete("/transaction/:id", async function (req, res){
+	const transactionId = req.params.id;
+	const response      = await deleteTransaction(transactionId);
+	res.json(JSON.stringify(response.data));
+})
+
 
 app.listen(8080, function () {
 	console.log("Listening on port 8080")
@@ -93,7 +99,11 @@ function getTransactions(){
 	const url = `${rootUrlApi}/transactions`;
 	return axios.get(url)
 }
-
+async function deleteTransaction(id){
+	const url = `${rootUrlApi}/transactions/${id}`;
+	const response = await axios.delete(url);
+	return response;
+}
 
 function formatMoney(value){
 	

@@ -10,8 +10,22 @@ for (let btn of removeBtns) {
 }
 
 
-async function deleteTransactionHandler(transactionId) {
+function deleteTransactionHandler(transactionId) {
 
-    alert(transactionId)
-
+    
+    axios.delete(`/transaction/${transactionId}`)
+        .then(function (response) {
+            const resp = JSON.parse(response.data);
+            if(resp.success){
+                alert("Transaction has been deleted");
+                location.reload(); // that is a bad practice (just for now)
+            }else{
+                alert("Error deleting transaction")
+            }
+            
+        })
+        .catch(function (error) {
+            alert("ERROR")
+            console.log(error);
+        });
 }
