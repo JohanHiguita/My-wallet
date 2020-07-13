@@ -68,10 +68,11 @@ app.get("/index2", async function (req, res) {
 
 })
 
-app.get("/categories", function (req, res) {
-	//res.sendFile(path.join(__dirname+'/index.html'));
-	const categories = getCategories();
-	res.render('categories', categories);
+app.get("/categories", async function (req, res) {
+	
+	const categories = await getCategories();
+	res.json(categories.data);
+	
 })
 
 app.delete("/transaction/:id", async function (req, res){
@@ -103,6 +104,12 @@ async function deleteTransaction(id){
 	const url = `${rootUrlApi}/transactions/${id}`;
 	const response = await axios.delete(url);
 	return response;
+}
+
+function getCategories(){
+	const url = `${rootUrlApi}/categories`;
+	return axios.get(url);
+	//return {"name":"johan"}
 }
 
 function formatMoney(value){

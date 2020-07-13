@@ -10,6 +10,14 @@ for (let btn of removeBtns) {
 }
 
 
+// When add button is clicked
+const addBtn = document.getElementById("add-transaction-btn");
+
+addBtn.addEventListener("click", addBtnHandler)
+
+
+/* Handlers */
+
 function deleteTransactionHandler(transactionId) {
 
     
@@ -28,4 +36,34 @@ function deleteTransactionHandler(transactionId) {
             alert("ERROR")
             console.log(error);
         });
+}
+
+function addBtnHandler(){
+    
+    //get Categories
+    alert("categories")
+    axios.get(`/categories`)
+        .then(function (response) {
+            const categories = response.data;   
+
+            //Render Categories
+            renderCategories(categories);
+        })
+        .catch(function (error) {
+            alert("ERROR")
+            console.log(error);
+        });
+    
+}
+
+/*  Renders */
+
+function renderCategories(categories) {
+	const select = document.getElementById("select-categories")
+	categories.forEach((category) => {
+		const op = document.createElement("option")
+		op.setAttribute("value", category["_id"])
+		op.text = category["name"]
+		select.add(op)
+	})
 }
